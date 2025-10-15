@@ -1,16 +1,18 @@
-import db from "../lib/db"
+import db from "../lib/db";
+import { PrismaAdapter } from "@auth/prisma-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
+import type { NextAuthOptions } from "next-auth";
 // import { signIn } from "next-auth/react";
 
-export const authOptions = {
-  // All the Providers that are provided by the next-auth will contain here
-
+export const authOptions: NextAuthOptions = {
+  
+  adapter: PrismaAdapter(db),
   providers: [
     CredentialsProvider({
-      name: "Credentials", // this is written in the button "Sign In with Credentials"
+      name: "Credentials",
       credentials: {
-            username: { label: "email", type: "text", placeholder: "Enter Email" },
+        username: { label: "email", type: "text", placeholder: "Enter Email" },
         password: {
           label: "password",
           type: "password",
@@ -31,7 +33,7 @@ export const authOptions = {
         };
       },
     }),
-    
+
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID || "",
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
@@ -39,28 +41,14 @@ export const authOptions = {
   ],
   secret: process.env.NEXTAUTH_SECRET || "secret",
   callbacks: {
-    // The jwt callback is used when you want to change something and embedd in jwt
-
-    // jwt: async ({ user, token }: any) => {
-    //   // console.log("This is user : " , user)
-    //   // console.log("This is token : " , token)
-
-    // if (user) {
-    //     token.uid = user.id;
-    // }
-    // return token;
-    // },
     session: ({ session, token, user }: any) => {
-      // console.log("This is token" , token)
-      // console.log( "This is session : " , session)
       if (session.user) {
         session.user.id = token.sub;
-        // console.log(session.user.id)
       }
       return session;
     },
   },
-//   pages : {
-//     signIn : "/signin"
-//   }
+  //   pages : {
+  //     signIn : "/signin"
+  //   }
 };
