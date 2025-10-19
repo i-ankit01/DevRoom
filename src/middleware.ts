@@ -1,6 +1,4 @@
-import { getToken } from "next-auth/jwt";
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import NextAuth from "next-auth";
 
 import {
   DEFAULT_LOGIN_REDIRECT,
@@ -8,50 +6,41 @@ import {
   publicRoutes,
   authRoutes,
 } from "@/allRoutes";
+import authConfig from "./auth.config";
 
-// Secret used to sign NextAuth JWT cookies
-const secret = process.env.NEXTAUTH_SECRET || "secret";
 
-export async function middleware(req: NextRequest) {
+const { auth } = NextAuth(authConfig);
+
+// @ts-ignore
+export default auth((req) => {
   const { nextUrl } = req;
+  const isLoggedIn = !!req.auth;
 
-  const pathname = nextUrl.pathname;
+  const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
 
-  // Skip static files and Next.js internals
-  if (pathname.startsWith("/_next") || pathname.includes(".")) {
-    return;
-  }
+  const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
 
-  const isApiAuthRoute = pathname.startsWith(apiAuthPrefix)
+  const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
-  // Skip API auth routes
   if (isApiAuthRoute) {
     return null;
   }
 
-  // Check if user is logged in by reading NextAuth JWT token
-  const token = await getToken({ req, secret });
-  const isLoggedIn = !!token;
-
-  const isPublicRoute = publicRoutes.includes(pathname);
-  const isAuthRoute = authRoutes.includes(pathname);
-
-  // If user is logged in and tries to access auth page (e.g., sign-in)
-  if (isAuthRoute && isLoggedIn) {
-    return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, req.url));
+  if (isAuthRoute) {
+    if (isLoggedIn) {
+      return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+    }
+    return null;
   }
 
-  // If user is not logged in and trying to access protected route
-  if (!isLoggedIn && !isPublicRoute) {
-    return NextResponse.redirect(new URL("/auth/sign-in", req.url));
+  if(!isLoggedIn && !isPublicRoute){
+    return Response.redirect(new URL("/auth/sign-in" , nextUrl))
   }
 
-  // Otherwise, allow request to continue
-  return NextResponse.next();
-}
+  return null
+});
 
-// Apply middleware to desired paths
 export const config = {
-  //copied from clerk
+  // copied from clerk
   matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
 };
