@@ -1,38 +1,44 @@
-'use client'
+"use client";
 
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/toggle-theme";
 import { Menu, X } from "lucide-react";
-import { useState } from "react"
+import { useState } from "react";
 
-
-export default function Header(){
+export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 w-full z-50 border-b border-gray-800/50 bg-black/80 backdrop-blur-md">
+    <header className="fixed top-0 w-full z-50 border-b border-gray-800/50 dark:bg-black/80 bg-white backdrop-blur-md">
       <nav className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          <div className="text-xl font-semibold text-white">Logo</div>
-          
+          <div className="text-xl font-semibold dark:text-white text-black">Logo</div>
+
           <div className="hidden md:flex items-center justify-center gap-8 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-            <a href="#getting-started" className="text-sm text-white/60 hover:text-white transition-colors">
+            <a
+              href="#getting-started"
+              className="text-sm text-gray-800 hover:text-gray-900 dark:text-white/60 dark:hover:text-white transition-colors"
+            >
               Getting started
             </a>
-            <a href="#components" className="text-sm text-white/60 hover:text-white transition-colors">
+            <a
+              href="#components"
+              className="text-sm text-gray-800 hover:text-gray-900 dark:text-white/60 dark:hover:text-white transition-colors"
+            >
               Components
             </a>
-            <a href="#documentation" className="text-sm text-white/60 hover:text-white transition-colors">
+            <a
+              href="#documentation"
+              className="text-sm text-gray-800 hover:text-gray-900 dark:text-white/60 dark:hover:text-white transition-colors"
+            >
               Documentation
             </a>
           </div>
 
           <div className="hidden md:flex items-center gap-4">
-            <Button type="button" variant="ghost" size="sm">
-              Sign in
-            </Button>
+            <ThemeToggle />
             <Button type="button" variant="default" size="sm">
-              Sign Up
+              Sign in
             </Button>
           </div>
 
@@ -52,21 +58,21 @@ export default function Header(){
           <div className="px-6 py-4 flex flex-col gap-4">
             <a
               href="#getting-started"
-              className="text-sm text-white/60 hover:text-white transition-colors py-2"
+              className="text-sm text-gray-800 hover:text-gray-900 dark:text-white/60 dark:hover:text-white transition-colors py-2"
               onClick={() => setMobileMenuOpen(false)}
             >
               Getting started
             </a>
             <a
               href="#components"
-              className="text-sm text-white/60 hover:text-white transition-colors py-2"
+              className="text-sm text-gray-800 hover:text-gray-900 dark:text-white/60 dark:hover:text-white transition-colors py-2"
               onClick={() => setMobileMenuOpen(false)}
             >
               Components
             </a>
             <a
               href="#documentation"
-              className="text-sm text-white/60 hover:text-white transition-colors py-2"
+              className="text-sm text-gray-800 hover:text-gray-900 dark:text-white/60 dark:hover:text-white transition-colors py-2"
               onClick={() => setMobileMenuOpen(false)}
             >
               Documentation

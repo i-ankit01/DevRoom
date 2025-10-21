@@ -6,7 +6,7 @@ export default function LandingLayout({children} : {children : React.ReactNode})
     return(
         <>
         <Header/>
-        <main className="z-20 relative pt-0 md:pt-0 bg-black">
+        <main className="z-20 relative pt-0 md:pt-0">
             {children}
         </main>
         <Footer/>
