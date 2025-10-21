@@ -15,37 +15,31 @@ import { useCurrentUser } from "../hooks/use-current-user";
 import LogoutButton from "./LogoutButton";
 
 const UserProfile = () => {
-
-  const user = useCurrentUser()
+  const user = useCurrentUser();
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
-        <div className={cn("relative rounded-full")}>
-          <Avatar>
-            <AvatarImage className="cursor-pointer" src={user?.image!} alt={user?.name!} />
-            <AvatarFallback className="bg-red-500">
-              <User className="text-white" />
-            </AvatarFallback>
-          </Avatar>
-        </div>
+      <DropdownMenuTrigger asChild>
+        <Avatar className="cursor-pointer focus-visible:ring-0 focus-visible:ring-offset-0">
+          <AvatarImage src={user?.image!} alt={user?.name!} />
+          <AvatarFallback className="bg-red-500">
+            <User className="text-white" />
+          </AvatarFallback>
+        </Avatar>
       </DropdownMenuTrigger>
 
-    <DropdownMenuContent className="mr-4">
-      <DropdownMenuItem>
-        <span>
-          {user?.email}
-        </span>
-      </DropdownMenuItem>
-      <DropdownMenuSeparator/>
+      <DropdownMenuContent className="mr-4">
+        <DropdownMenuItem className="cursor-pointer">
+          <span>{user?.email}</span>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
         <LogoutButton>
-            <DropdownMenuItem>
-                <LogOut className="h-4 w-4 mr-2"/>
-                LogOut
-            </DropdownMenuItem>
+          <DropdownMenuItem className="cursor-pointer">
+            <LogOut className="h-4 w-4 mr-2" />
+            LogOut
+          </DropdownMenuItem>
         </LogoutButton>
-    </DropdownMenuContent>
-
+      </DropdownMenuContent>
     </DropdownMenu>
   );
 };

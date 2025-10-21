@@ -2,10 +2,13 @@
 
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/toggle-theme";
+import UserProfile from "@/features/auth/components/UserProfile";
+import { useCurrentUser } from "@/features/auth/hooks/use-current-user";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 
 export default function Header() {
+  const user = useCurrentUser()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -37,9 +40,13 @@ export default function Header() {
 
           <div className="hidden md:flex items-center gap-4">
             <ThemeToggle />
-            <Button type="button" variant="default" size="sm">
-              Sign in
-            </Button>
+            {user ? (
+              <UserProfile />
+            ) : (
+              <Button type="button" variant="default" size="sm">
+                Sign in
+              </Button>
+            )}
           </div>
 
           <button
@@ -79,9 +86,13 @@ export default function Header() {
             </a>
             <div className="flex flex-col gap-2 pt-4 border-t border-gray-800/50">
               <ThemeToggle />
+              {user ? (
+              <UserProfile />
+            ) : (
               <Button type="button" variant="default" size="sm">
                 Sign in
               </Button>
+            )}
             </div>
           </div>
         </div>
