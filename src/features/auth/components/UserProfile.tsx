@@ -23,7 +23,7 @@ const UserProfile = () => {
       <DropdownMenuTrigger>
         <div className={cn("relative rounded-full")}>
           <Avatar>
-            <AvatarImage src={user?.image!} alt={user?.name!} />
+            <AvatarImage className="cursor-pointer" src={user?.image!} alt={user?.name!} />
             <AvatarFallback className="bg-red-500">
               <User className="text-white" />
             </AvatarFallback>
