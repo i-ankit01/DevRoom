@@ -20,15 +20,17 @@ enum UserRole {
 }
 
 model User {
-  id        String    @id @default(cuid())
-  email     String?   @unique
-  name      String?
-  image     String?
-  role      UserRole  @default(USER)
-  accounts  Account[]
-  sessions  Session[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id                String       @id @default(cuid())
+  email             String?      @unique
+  name              String?
+  image             String?
+  role              UserRole     @default(USER)
+  myPlayground      Playground[]
+  starredPlayground StarMark[]
+  accounts          Account[]
+  sessions          Session[]
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
 }
 
 model Account {
@@ -75,4 +77,42 @@ model VerificationToken {
 
   @@unique([identifier, token])
   @@map("verification_tokens")
+}
+
+enum Templates {
+  REACT
+  NEXTJS
+  HTML
+  HONO
+  ANGULAR
+  EXPRESS
+  VUE
+}
+
+model Playground {
+  id          String     @id @default(cuid())
+  title       String
+  description String
+  template    Templates  @default(REACT)
+  starMark    StarMark[]
+  userId      String     @map("user_id")
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // add template files here 
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model StarMark {
+  id           String     @id @default(cuid())
+  userId       String
+  playgroundId String
+  isMarked     Boolean
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  playground   Playground @relation(fields: [playgroundId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, playgroundId])
 }
