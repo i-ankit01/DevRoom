@@ -8,8 +8,7 @@ import { revalidatePath } from "next/cache";
 export const createProject = async (data: {
   title: string;
   template: Templates;
-  description: string;
-  userId: string;
+  description?: string;
 }) => {
   const { title, template, description } = data;
 
@@ -19,7 +18,7 @@ export const createProject = async (data: {
     const project = await db.project.create({
       data: {
         title,
-        description,
+        description : description ?? "",
         template,
         userId: user?.id!,
       },

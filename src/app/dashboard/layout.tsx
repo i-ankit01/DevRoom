@@ -15,7 +15,7 @@ export default async function DashboardLayout({
     id : project.id,
     name : project.title,
     icon : project.template,
-    starred : project.starredProjects[0].isMarked
+    starred : project.starredProjects[0]?.isMarked
   })) || []
 
   return (

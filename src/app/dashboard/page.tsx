@@ -1,5 +1,4 @@
 import { deleteProjectByid, editProjectById, getAllProjectForUser } from "@/features/dashboard/actions";
-import AddNewProject from "@/features/dashboard/components/AddNewProject";
 import DashboardHeader from "@/features/dashboard/components/DashboardHeader";
 import EmptyArea from "@/features/dashboard/components/EmptyArea";
 import ProjectTable from "@/features/dashboard/components/ProjectTable";

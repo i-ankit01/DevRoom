@@ -1,3 +1,5 @@
+'use client'
+
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -133,7 +135,7 @@ export default function ProjectTable({
                     <div className="flex items-center gap-2">
                       <IconFolder className="h-4 w-4 text-muted-foreground" />
                       <Link
-                        href={`/playground/${project.id}`}
+                        href={`/project/${project.id}`}
                         className="hover:underline"
                       >
                         <span className="font-semibold">{project.title}</span>

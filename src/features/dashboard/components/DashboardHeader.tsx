@@ -14,12 +14,34 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { Github, Plus } from "lucide-react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import TemplateSelectionModal from "@/components/modal/TemplateSelectionModal";
+import { createProject } from "../actions";
+
+interface TemplateData {
+  title: string;
+  template: "REACT" | "NEXTJS" | "EXPRESS" | "VUE" | "HONO" | "ANGULAR";
+  description?: string;
+}
 
 export default function DashboardHeader() {
-  const [newProjectOpen, setNewProjectOpen] = useState(false);
+  const router = useRouter()
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState<TemplateData | null>(null);
   const [importRepoOpen, setImportRepoOpen] = useState(false);
+
+  const handleSubmit = async (data : TemplateData) => {
+    setSelectedTemplate(data)
+    const res = await createProject(data)
+    toast.success("Project Created Successfully")
+
+    setIsModalOpen(false)
+    router.push(`project/${res?.id}`)
+  };
   return (
-    <div>
+    <>
       <header className="border-b bg-card">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
@@ -72,50 +94,19 @@ export default function DashboardHeader() {
                 </DialogContent>
               </Dialog>
 
-              <Dialog open={newProjectOpen} onOpenChange={setNewProjectOpen}>
-                <DialogTrigger asChild>
-                  <Button className="gap-2">
-                    <Plus className="h-4 w-4" />
-                    New Project
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Create New Project</DialogTitle>
-                    <DialogDescription>
-                      Start a new project from scratch or use a template
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="space-y-4 py-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="name">Project Name</Label>
-                      <Input id="name" placeholder="my-new-project" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="description">Description</Label>
-                      <Input
-                        id="description"
-                        placeholder="A brief description of your project"
-                      />
-                    </div>
-                  </div>
-                  <DialogFooter>
-                    <Button
-                      variant="outline"
-                      onClick={() => setNewProjectOpen(false)}
-                    >
-                      Cancel
-                    </Button>
-                    <Button onClick={() => setNewProjectOpen(false)}>
-                      Create Project
-                    </Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
+              <Button onClick={() => setIsModalOpen(true)} className="gap-2">
+                <Plus className="h-4 w-4" />
+                New Project
+              </Button>
             </div>
           </div>
         </div>
       </header>
-    </div>
+      <TemplateSelectionModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleSubmit}
+      />
+    </>
   );
 }
