@@ -15,28 +15,30 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import {
-  Code2,
-  Compass,
   FolderPlus,
   History,
   Home,
   LayoutDashboard,
-  Lightbulb,
-  type LucideIcon,
   Plus,
-  Settings,
   Star,
-  Terminal,
-  Zap,
-  Database,
-  FlameIcon,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import {
+  IconBrandReact,
+  IconBrandNextjs,
+  IconBrandHtml5,
+  IconFlame,
+  IconBrandAngular,
+  IconServer,
+  IconBrandVue,
+  IconCode, // Default fallback
+  type IconProps,
+} from "@tabler/icons-react";
 
-interface PlaygroundDataProps {
+interface ProjectDataProps {
   id: string;
   name: string;
   icon: string;
@@ -44,29 +46,27 @@ interface PlaygroundDataProps {
 }
 
 // Map icon names (strings) to their corresponding LucideIcon components
-const lucideIconMap: Record<string, LucideIcon> = {
-  Zap: Zap,
-  Lightbulb: Lightbulb,
-  Database: Database,
-  Compass: Compass,
-  FlameIcon: FlameIcon,
-  Terminal: Terminal,
-  Code2: Code2, // Include the default icon
-  // Add any other icons you might use dynamically
+const IconMap: Record<string, React.FC<IconProps>> = {
+  REACT: IconBrandReact,
+  NEXTJS: IconBrandNextjs,
+  HTML: IconBrandHtml5,
+  HONO: IconFlame,
+  ANGULAR: IconBrandAngular,
+  EXPRESS: IconServer,
+  VUE: IconBrandVue,
+  DEFAULT: IconCode, // Include the default icon
 };
 
 export default function DashboardSidebar({
-  initialPlaygroundData,
+  initialProjectData,
 }: {
-  initialPlaygroundData: PlaygroundDataProps[];
+  initialProjectData: ProjectDataProps[];
 }) {
   const pathname = usePathname();
-  const [starredPlaygrounds, setStarredPlaygrounds] = useState(
-    initialPlaygroundData.filter((item) => item.starred)
+  const [starredProjects, setStarredProjects] = useState(
+    initialProjectData.filter((item) => item.starred)
   );
-  const [recentPlaygrounds, setRecentPlaygrounds] = useState(
-    initialPlaygroundData
-  );
+  const [recentProjects, setRecentProjects] = useState(initialProjectData);
   return (
     <Sidebar variant="inset" collapsible="icon" className="border-1 border-r">
       <SidebarHeader>
@@ -109,31 +109,31 @@ export default function DashboardSidebar({
             <Star className="h-4 w-4 mr-2" />
             Starred
           </SidebarGroupLabel>
-          <SidebarGroupAction title="Add starred playground">
+          <SidebarGroupAction title="Add starred project">
             <Plus className="h-4 w-4" />
           </SidebarGroupAction>
           <SidebarGroupContent>
             <SidebarMenu>
-              {starredPlaygrounds.length === 0 &&
-              recentPlaygrounds.length === 0 ? (
+              {starredProjects.length === 0 && recentProjects.length === 0 ? (
                 <div className="text-center text-muted-foreground py-4 w-full">
-                  Create your playground
+                  Create Your Project
                 </div>
               ) : (
-                starredPlaygrounds.map((playground) => {
-                  const IconComponent = lucideIconMap[playground.icon] || Code2;
+                starredProjects.map((project) => {
+                  const IconComponent =
+                    IconMap[project.icon] || IconMap.DEFAULT;
                   return (
-                    <SidebarMenuItem key={playground.id}>
+                    <SidebarMenuItem key={project.id}>
                       <SidebarMenuButton
                         asChild
-                        isActive={pathname === `/playground/${playground.id}`}
-                        tooltip={playground.name}
+                        isActive={pathname === `/project/${project.id}`}
+                        tooltip={project.name}
                       >
-                        <Link href={`/playground/${playground.id}`}>
+                        <Link href={`/project/${project.id}`}>
                           {IconComponent && (
                             <IconComponent className="h-4 w-4" />
                           )}
-                          <span>{playground.name}</span>
+                          <span>{project.name}</span>
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -149,28 +149,28 @@ export default function DashboardSidebar({
             <History className="h-4 w-4 mr-2" />
             Recent
           </SidebarGroupLabel>
-          <SidebarGroupAction title="Create new playground">
+          <SidebarGroupAction title="Create new project">
             <FolderPlus className="h-4 w-4" />
           </SidebarGroupAction>
           <SidebarGroupContent>
             <SidebarMenu>
-              {starredPlaygrounds.length === 0 && recentPlaygrounds.length === 0
+              {starredProjects.length === 0 && recentProjects.length === 0
                 ? null
-                : recentPlaygrounds.map((playground) => {
+                : recentProjects.map((project) => {
                     const IconComponent =
-                      lucideIconMap[playground.icon] || Code2;
+                      IconMap[project.icon] || IconMap.DEFAULT;
                     return (
-                      <SidebarMenuItem key={playground.id}>
+                      <SidebarMenuItem key={project.id}>
                         <SidebarMenuButton
                           asChild
-                          isActive={pathname === `/playground/${playground.id}`}
-                          tooltip={playground.name}
+                          isActive={pathname === `/project/${project.id}`}
+                          tooltip={project.name}
                         >
-                          <Link href={`/playground/${playground.id}`}>
+                          <Link href={`/project/${project.id}`}>
                             {IconComponent && (
                               <IconComponent className="h-4 w-4" />
                             )}
-                            <span>{playground.name}</span>
+                            <span>{project.name}</span>
                           </Link>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
@@ -178,9 +178,9 @@ export default function DashboardSidebar({
                   })}
               <SidebarMenuItem>
                 <SidebarMenuButton asChild tooltip="View all">
-                  <Link href="/playgrounds">
+                  <Link href="/projects">
                     <span className="text-sm text-muted-foreground">
-                      View all playgrounds
+                      View all projects
                     </span>
                   </Link>
                 </SidebarMenuButton>
