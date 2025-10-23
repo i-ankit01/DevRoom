@@ -4,6 +4,7 @@ import "./globals.css";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,8 +19,7 @@ const geistMono = Geist_Mono({
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-})
-
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -35,15 +35,14 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <SessionProvider session={session}>
-        <body
-          className={` ${poppins.className} antialiased`}
-        >
+        <body className={` ${poppins.className} antialiased`}>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
             enableSystem
             disableTransitionOnChange
           >
+            <Toaster />
             {children}
           </ThemeProvider>
         </body>
